@@ -21,6 +21,7 @@ public class CustomerService {
       .email(customerDTO.getEmail())
       .build();
 
+    // Implementar proxy para verificar que el correo no sea del dominio yahoo
     return customerRepository.save(customer);
   }
 }

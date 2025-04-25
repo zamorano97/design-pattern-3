@@ -8,27 +8,27 @@ import com.example.patterns_banking.repositories.ICustomerRepository;
 import com.example.patterns_banking.services.commands.CreateAccountCommand;
 import com.example.patterns_banking.services.commands.DepositCommand;
 import com.example.patterns_banking.services.commands.ICommand;
+import com.example.patterns_banking.services.commands.WithdrawCommand;
+import com.example.patterns_banking.services.proxy.IAccountOperations;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
-  private final IAccountRepository accountRepository;
-  private final ICustomerRepository customerRepository;
-  private final AccountFactoryProvider accountFactoryProvider;
+  private final IAccountOperations proxy;
 
-  public AccountService(IAccountRepository accountRepository, ICustomerRepository customerRepository, AccountFactoryProvider accountFactoryProvider) {
-    this.accountRepository = accountRepository;
-    this.customerRepository = customerRepository;
-    this.accountFactoryProvider = accountFactoryProvider;
+  public AccountService(IAccountOperations proxy) {
+    this.proxy = proxy;
   }
 
   public Account createAccount(AccountDTO accountDTO) {
-    ICommand<Account> command = new CreateAccountCommand(accountRepository, customerRepository, accountFactoryProvider, accountDTO);
-    return command.execute();
+    return proxy.createAccount(accountDTO);
   }
 
   public Account deposit(Long accountId, Double amount) {
-    ICommand<Account> command = new DepositCommand(accountRepository, accountId, amount);
-    return command.execute();
+    return proxy.deposit(accountId, amount);
+  }
+
+  public Account withdraw(Long accountId, Double amount) {
+    return proxy.withdraw(accountId, amount);
   }
 }

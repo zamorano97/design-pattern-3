@@ -22,9 +22,18 @@ public abstract class Account {
   private Customer customer;
 
   public abstract Double calculateDepositFee(Double amount);
+  public abstract double calculateWithdrawalFee(double amount);
 
   public void deposit(Double amount) {
     double fee = calculateDepositFee(amount);
     this.balance += amount - fee;
+  }
+
+  public void withdraw(double amount) {
+    if (amount > this.balance) {
+      throw new IllegalArgumentException("Insufficient funds");
+    }
+    double fee = calculateWithdrawalFee(amount);
+    this.balance -= (amount + fee);
   }
 }

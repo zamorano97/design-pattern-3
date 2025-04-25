@@ -1,6 +1,7 @@
 package com.example.patterns_banking.services.commands;
 
 import com.example.patterns_banking.models.Account;
+import com.example.patterns_banking.models.decorator.AccountNotificationDecorator;
 import com.example.patterns_banking.repositories.IAccountRepository;
 
 import java.util.Optional;
@@ -24,7 +25,8 @@ public class DepositCommand implements ICommand<Account> {
     }
 
     Account account = accountOptional.get();
-    account.deposit(amount);
-    return accountRepository.save(account);
+    Account accountDec = new AccountNotificationDecorator(account);
+    accountDec.deposit(amount);
+    return accountRepository.save(accountDec);
   }
 }

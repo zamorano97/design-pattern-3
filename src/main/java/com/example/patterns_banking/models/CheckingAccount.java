@@ -19,4 +19,9 @@ public class CheckingAccount extends Account{
   public Double calculateDepositFee(Double amount) {
     return amount * DEPOSIT_FEE_RATE;
   }
+
+  @Override
+  public double calculateWithdrawalFee(double amount) {
+    return amount * WITHDRAWAL_FEE_RATE;
+  }
 }
