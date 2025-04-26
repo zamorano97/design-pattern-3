@@ -1,6 +1,7 @@
 package com.example.patterns_banking.services.commands;
 
 import com.example.patterns_banking.models.Account;
+import com.example.patterns_banking.models.decorator.AccountLimitAndWithdrawDecorator;
 import com.example.patterns_banking.repositories.IAccountRepository;
 
 import java.util.Optional;
@@ -39,14 +40,12 @@ public class WithdrawCommand implements ICommand<Account> {
             throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
 
-        Optional<Account> accountOpt = accountRepository.findById(accountId);
-        if (accountOpt.isEmpty()) {
-            throw new IllegalArgumentException("Account not found with ID: " + accountId);
-        }
+        Account acc = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException(" not found : " + accountId));
 
-        Account account = accountOpt.get();
-        account.withdraw(amount);
+        Account acco = new AccountLimitAndWithdrawDecorator(acc);
+        acco.withdraw(amount);
 
-        return accountRepository.save(account);
+        return accountRepository.save(acco);
     }
 }
